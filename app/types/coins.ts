@@ -1,1 +1,22 @@
-ZXhwb3J0IGludGVyZmFjZSBDb2luIHsKICBpZDogc3RyaW5nOwogIG5hbWU6IHN0cmluZzsKICBzeW1ib2w6IHN0cmluZzsKICBpbWFnZTogc3RyaW5nOwogIGN1cnJlbnRfcHJpY2U6IG51bWJlcjsKICBwcmljZV9jaGFuZ2VfcGVyY2VudGFnZV8yNGg6IG51bWJlcjsKICBtYXJrZXRfY2FwOiBudW1iZXI7CiAgdG90YWxfdm9sdW1lOiBudW1iZXI7Cn0KCmV4cG9ydCBpbnRlcmZhY2UgU2VhcmNoUGFyYW1zIHsKICBwYWdlPzogc3RyaW5nOwp9CgpleHBvcnQgaW50ZXJmYWNlIFBhZ2luYXRpb25Qcm9wcyB7CiAgY3VycmVudFBhZ2U6IG51bWJlcjsKfQoKZXhwb3J0IGludGVyZmFjZSBIb21lUHJvcHMgewogIHNlYXJjaFBhcmFtczogU2VhcmNoUGFyYW1zOwp9
+export interface Coin {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  market_cap: number;
+  total_volume: number;
+}
+
+export interface SearchParams {
+  page?: string;
+}
+
+export interface PaginationProps {
+  currentPage: number;
+}
+
+export interface HomeProps {
+  searchParams: SearchParams;
+}
