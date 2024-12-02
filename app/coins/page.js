@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import PaginationControls from './components/PaginationControls';
+import SearchBar from './components/SearchBar';
 
-async function getCoins() {
+async function getCoins(page = 1, perPage = 20) {
   const res = await fetch(
-    'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=price_desc&per_page=10&page=1&sparkline=false',
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=price_desc&per_page=${perPage}&page=${page}&sparkline=false`,
     { next: { revalidate: 60 } }
   );
   
@@ -13,14 +15,25 @@ async function getCoins() {
   return res.json();
 }
 
-export default async function Coins() {
-  const coins = await getCoins();
+export default async function Coins({ searchParams }) {
+  const page = Number(searchParams?.page) || 1;
+  const perPage = 20;
+  const coins = await getCoins(page, perPage);
 
   return (
     <div className="max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Top 10 Most Expensive Cryptocurrencies</h1>
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white rounded-lg shadow">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Cryptocurrency Prices</h1>
+        <Link 
+          href="/coins/search"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          Search Coins
+        </Link>
+      </div>
+
+      <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
@@ -36,7 +49,7 @@ export default async function Coins() {
             {coins.map((coin, index) => (
               <tr key={coin.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {index + 1}
+                  {(page - 1) * perPage + index + 1}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -59,11 +72,7 @@ export default async function Coins() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex text-sm ${
-                    coin.price_change_percentage_24h > 0 
-                      ? 'text-green-600' 
-                      : 'text-red-600'
-                  }`}>
+                  <span className={`inline-flex text-sm ${coin.price_change_percentage_24h > 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {coin.price_change_percentage_24h > 0 ? '↑' : '↓'}
                     {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
                   </span>
@@ -86,6 +95,10 @@ export default async function Coins() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-6">
+        <PaginationControls currentPage={page} />
       </div>
     </div>
   );
