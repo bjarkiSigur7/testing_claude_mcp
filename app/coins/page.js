@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import PaginationControls from './components/PaginationControls';
-import SearchBar from './components/SearchBar';
 
 async function getCoins(page = 1, perPage = 20) {
   const res = await fetch(
